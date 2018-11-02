@@ -8,26 +8,20 @@ class ListLocations extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      places: this.props.places
+      places: this.props.location.state.places
     };
   }
 
-  render() {
-    const places = this.props.places.slice().sort(function(a, b) {
-      const nameA = a.name.toUpperCase(); // ignore upper and lowercase
-      const nameB = b.name.toUpperCase(); // ignore upper and lowercase
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      // names must be equal
-      return 0;
-    });
+  sortLikesAscending = () => {
+    const places = this.state.places.slice().sort((a, b) => a.likes - b.likes);
+    this.setState({ places });
+  };
 
+  render() {
+    // const places = this.state.places;
+    debugger;
     return (
-      <div>
+      <div class="row">
         <div className="navbar">
           <NavLink to="/" exact>
             <button className="button">Add Location</button>
@@ -38,12 +32,15 @@ class ListLocations extends Component {
               allPlaces: { allPlaces: this.props.allPlaces }
             }}
           >
-            <button className="button">See Contacts</button>
+            <button className="tripleButton">See Contacts</button>
           </NavLink>
+          <button className="tripleButton" onClick={this.sortLikesAscending}>
+            Sort Likes Asc
+          </button>
         </div>
         <div className="locations">
           <ul>
-            {places.map(place => {
+            {this.state.places.map(place => {
               return (
                 <div key={place.id}>
                   <Link
@@ -51,7 +48,7 @@ class ListLocations extends Component {
                       pathname: `Place/${place.id}`,
                       state: {
                         place: place,
-                        places: this.state.places,
+                        places: this.props.places,
                         allPlaces: this.props.allPlaces
                       },
                       query: { id: place.id }
@@ -67,8 +64,9 @@ class ListLocations extends Component {
                   <p>Description: {place.description}</p>
                   <LikesButton
                     place={place}
-                    bounds={this.props.bounds}
                     getLocations={this.props.getLocations}
+                    updateLikes={this.updateLikes}
+                    bounds={this.props.bounds}
                   />
 
                   {/*<p>image: {place.image}</p>
