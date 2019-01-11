@@ -19,7 +19,7 @@ class ListLocations extends Component {
 
   render() {
     // const places = this.state.places;
-    debugger;
+    // debugger;
     return (
       <div class="row">
         <div className="navbar">
